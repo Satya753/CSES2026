@@ -55,21 +55,24 @@ void solve(){
     for (int i = 0 ;i < n; i++){
         int a , b;
         cin >> a >> b;
-        iv.push_back({a , b});
+        iv.push_back({b , a});
     }
-
-    sort(iv.begin() , iv.end() , cmp);
-
-    priority_queue < pair < int , int > , vector < pair < int , int > > , greater < pair < int , int > >  > pq;
     int cnt = 0;
-    for (int i = 0 ;i < n; i++){
-        while(pq.size() > 0 && pq.top().first <= iv[i].first)
-            pq.pop();
 
-        if (pq.size() < k){
-            cnt = cnt + 1;
-            pq.push({iv[i].second , i});
-        }
+    sort(iv.begin() , iv.end());
+
+    multiset < int > end_times;
+
+    for (int i  = 0 ;i < k ; i++)
+        end_times.insert(0);
+
+    for (int i = 0; i < n ; i++){
+        auto it = end_times.upper_bound(iv[i].second);
+        if (it==begin(end_times))
+            continue;
+        end_times.erase(--it);
+        end_times.insert(iv[i].first);
+        cnt = cnt + 1;
     }
     cout << cnt << endl;
 }
